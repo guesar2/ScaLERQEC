@@ -182,6 +182,20 @@ void QEPG::backward_graph_construction(){
                 current_noise_index--;
                 continue;
         }
+        if (name=="DEPOLARIZE2"){
+                size_t qindex1=gate.qubits[0];
+                size_t qindex2=gate.qubits[1];
+                /*
+                Uptill now, the fate of this noise is determined
+                So in priciple, we can update the parity propagation
+                */
+                parityPropMatrixTranspose_[current_noise_index]=current_x_parity_prop[qindex1]^current_x_parity_prop[qindex2];   //current_x_prop(circuit_.get_num_qubit(),Row(3* total_noise_))
+                parityPropMatrixTranspose_[total_noise_+current_noise_index]=current_y_parity_prop[qindex1]^current_y_parity_prop[qindex2];
+                parityPropMatrixTranspose_[total_noise_*2+current_noise_index]=current_z_parity_prop[qindex1]^current_z_parity_prop[qindex2];
+
+                current_noise_index--;
+                continue;
+        }
         /*
         *   When the gate is a measurement
         */

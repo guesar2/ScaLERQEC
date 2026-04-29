@@ -110,6 +110,13 @@ public:
      */
     void add_depolarize1(size_t qindex);
 
+    /**
+     * @brief Append a two-qubit depolarizing noise channel and increment the noise counter.
+     * @param qindex First qubit index.
+     * @param qindex2 Second qubit index.
+     */
+    void add_depolarize2(size_t qindex, size_t qindex2);
+
     /*Clifford gates---------------------------------------*/
 
     /**

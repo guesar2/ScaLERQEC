@@ -53,6 +53,13 @@ void cliffordcircuit::add_depolarize1(size_t qindex) {
     num_qubit_=std::max(num_qubit_,qindex+1);
 }
 
+/// @brief Append a DEPOLARIZE2 noise channel and increment the noise counter.
+void cliffordcircuit::add_depolarize2(size_t qindex, size_t qindex2) {
+    circuit_.push_back({"DEPOLARIZE2", {qindex, qindex2}});
+    num_noise_++;
+    num_qubit_=std::max(num_qubit_,qindex+1);
+}
+
 
 
 /*--------------------------------------------1 qubit gate*/
@@ -60,8 +67,8 @@ void cliffordcircuit::add_depolarize1(size_t qindex) {
 
 /// @brief Append Hadamard gate preceded by depolarizing noise.
 void cliffordcircuit::add_hadamard(size_t qindex){
-    add_depolarize1(qindex);
     circuit_.push_back({"h", {qindex}});
+    add_depolarize1(qindex);
     num_qubit_=std::max(num_qubit_,qindex+1);
 }
 
@@ -103,9 +110,10 @@ void cliffordcircuit::add_pauliz(size_t qindex){
  * Two DEPOLARIZE1 channels are inserted (one per qubit) before the CNOT instruction.
  */
 void cliffordcircuit::add_cnot(size_t qcontrol, size_t qtarget){
-    add_depolarize1(qcontrol);
-    add_depolarize1(qtarget);
     circuit_.push_back({"cnot", {qcontrol,qtarget}});
+    add_depolarize1(qcontrol);
+//    add_depolarize1(qtarget);
+    add_depolarize2(qcontrol,qtarget);
     num_qubit_=std::max(num_qubit_,qcontrol+1);
     num_qubit_=std::max(num_qubit_,qtarget+1);
 }
@@ -115,8 +123,8 @@ void cliffordcircuit::add_cnot(size_t qcontrol, size_t qtarget){
 
 /// @brief Append a reset operation (no noise channel).
 void cliffordcircuit::add_reset(size_t qindex){
-    //add_depolarize1(qindex);
     circuit_.push_back({"R", {qindex}});
+    add_depolarize1(qindex);
     num_qubit_=std::max(num_qubit_,qindex+1);
 }
 
@@ -154,7 +162,7 @@ void cliffordcircuit::print_circuit() const{
 
     const std::size_t n = circuit_.size();
     const int width = static_cast<int>(std::to_string(n - 1).size());  // digits
-
+    
     for (std::size_t i = 0; i < n; ++i) {
         const auto& g = circuit_[i];
 
