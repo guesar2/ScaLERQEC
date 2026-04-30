@@ -111,7 +111,7 @@ void cliffordcircuit::add_pauliz(size_t qindex){
  */
 void cliffordcircuit::add_cnot(size_t qcontrol, size_t qtarget){
     circuit_.push_back({"cnot", {qcontrol,qtarget}});
-    add_depolarize1(qcontrol);
+//    add_depolarize1(qcontrol);
 //    add_depolarize1(qtarget);
     add_depolarize2(qcontrol,qtarget);
     num_qubit_=std::max(num_qubit_,qcontrol+1);
