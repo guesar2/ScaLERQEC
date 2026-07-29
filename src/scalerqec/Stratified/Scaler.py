@@ -285,9 +285,9 @@ class Scaler:
         self._stim_str_after_rewrite = stim_str
 
         # Inject noise for decoder (DEM needs noisy circuit)
-        from scalerqec.QEC.noisemodel import SIDNoiseModel
-
-        noisy_stim = SIDNoiseModel(self._error_rate).inject_noise(
+        from src.noise.noise import CircuitLevelNoise
+        
+        noisy_stim = CircuitLevelNoise(self._error_rate, self._error_rate, self._error_rate, self._error_rate).apply(
             self._cliffordcircuit.stimcircuit
         )
 
